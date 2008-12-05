@@ -39,7 +39,7 @@ Recommends:	openal
 %package devel
 License:	GPLv2+
 Summary:	Quake III
-Group:	Development/Tools/Building
+Group:	Development/Other
 %if %with_installer
 
 %package setup
