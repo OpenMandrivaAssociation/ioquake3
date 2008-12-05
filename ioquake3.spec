@@ -23,7 +23,12 @@ URL:	http://icculus.org/quake3/
 Group:	Games/Arcade
 # don't forget to change the version in the win32 spec file as well!
 Version:	1.35
-Release:	%mkrel 1 %{?svnrev: -c %{svnrev} }
+%define rel 1
+%if %{?svnrev:1}%{?!svnrev:0}
+Release:	%mkrel %rel -c %{svnrev}
+%else
+Release:	%mkrel %rel
+%endif
 Summary:	Quake III
 BuildRoot:	%{_tmppath}/%{name}-%{version}-build
 Source:	ioquake3-%{version}%{?svnrev:_SVN%{svnrev}}.tar.bz2
