@@ -11,12 +11,13 @@
 
 # norootforbuild
 %define q3dir %{buildroot}%{_libdir}/ioquake3
+%define svnrev 1486
 
 Name:	ioquake3
 %define with_installer %{?_with_installer:1}%{!?_with_installer:0}
 BuildRequires:	SDL-devel curl-devel nasm 
 %if 0%{?mandriva_version}
-BuildRequires:	mesagl-devel mesaglu-devel
+BuildRequires:	mesagl-devel mesaglu-devel openal-devel
 # XXX: ambiguous requirement of alsa-plugins
 BuildRequires:	libspeex
 %else
@@ -32,11 +33,11 @@ License:	GPL v2 or later
 URL:	http://icculus.org/quake3/
 Group:	Games/Arcade
 # don't forget to change the version in the win32 spec file as well!
-Version:	1.35_SVN1486
-Release:	%mkrel 1
+Version:	1.35
+Release:	%mkrel 1 %{?svnrev: -c %{svnrev} }
 Summary:	Quake III
 BuildRoot:	%{_tmppath}/%{name}-%{version}-build
-Source:	ioquake3-%{version}.tar.bz2
+Source:	ioquake3-%{version}%{?svnrev:_SVN%{svnrev}}.tar.bz2
 %if %with_installer
 Recommends:	openal
 %endif
@@ -87,7 +88,7 @@ Authors:
 
 %endif
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}%{?svnrev:_SVN%{svnrev}}
 rm -rf code/SDL12 code/libs code/AL
 
 %build
