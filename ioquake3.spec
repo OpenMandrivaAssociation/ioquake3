@@ -15,7 +15,7 @@
 
 Name:	ioquake3
 %define with_installer %{?_with_installer:1}%{!?_with_installer:0}
-BuildRequires:	SDL-devel curl-devel nasm 
+BuildRequires:	SDL-devel curl-devel nasm openal-devel
 %if 0%{?mandriva_version}
 BuildRequires:	mesagl-devel mesaglu-devel openal-devel
 # XXX: ambiguous requirement of alsa-plugins
@@ -24,7 +24,7 @@ BuildRequires:	libspeex
 %endif
 %if 0%{?fedora_version} || 0%{?rhel_version} || 0%{?centos_version}
 # XXX bug in openal-devel, should be worked around in build config
-BuildRequires:	openal
+BuildRequires:	openal-devel
 %endif
 %if %with_installer
 BuildRequires:	loki_setup xdg-utils
