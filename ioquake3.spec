@@ -1,15 +1,4 @@
   
-#
-# spec file for package ioquake3 (Version 1.35_SVN1201)
-#
-# Copyright (c) 2007 SUSE LINUX Products GmbH, Nuernberg, Germany.
-# This file and all modifications and additions to the pristine
-# package are under the same license as the package itself.
-#
-# Please submit bugfixes or comments via http://bugs.opensuse.org/
-#
-
-# norootforbuild
 %define q3dir %{buildroot}%{_libdir}/ioquake3
 %define svnrev 1486
 
@@ -29,7 +18,7 @@ BuildRequires:	openal-devel
 %if %with_installer
 BuildRequires:	loki_setup xdg-utils
 %endif
-License:	GPL v2 or later
+License:	GPLv2+
 URL:	http://icculus.org/quake3/
 Group:	Games/Arcade
 # don't forget to change the version in the win32 spec file as well!
@@ -43,13 +32,13 @@ Recommends:	openal
 %endif
 
 %package devel
-License:	GPL v2 or later
+License:	GPLv2+
 Summary:	Quake III
 Group:	Development/Tools/Building
 %if %with_installer
 
 %package setup
-License:	GPL v2 or later
+License:	GPLv2+
 Summary:	Quake III loki-setup based installer
 Group:	Games/Arcade
 %endif
