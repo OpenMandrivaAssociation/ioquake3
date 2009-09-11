@@ -23,7 +23,7 @@ URL:	http://icculus.org/quake3/
 Group:	Games/Arcade
 # don't forget to change the version in the win32 spec file as well!
 Version:	1.35
-%define rel 1
+%define rel 2
 %if %{?svnrev:1}%{?!svnrev:0}
 Release:	%mkrel %rel -c %{svnrev}
 %else
