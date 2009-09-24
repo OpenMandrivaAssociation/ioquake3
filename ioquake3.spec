@@ -1,6 +1,6 @@
   
 %define q3dir %{buildroot}%{_libdir}/ioquake3
-%define svnrev 1486
+#define svnrev 1486
 
 Name:	ioquake3
 %define with_installer %{?_with_installer:1}%{!?_with_installer:0}
@@ -19,11 +19,11 @@ BuildRequires:	openal-devel
 BuildRequires:	loki_setup xdg-utils
 %endif
 License:	GPLv2+
-URL:	http://icculus.org/quake3/
+URL:	http://www.ioquake3.org/
 Group:	Games/Arcade
 # don't forget to change the version in the win32 spec file as well!
-Version:	1.35
-%define rel 2
+Version:	1.36
+%define rel 1
 %if %{?svnrev:1}%{?!svnrev:0}
 Release:	%mkrel %rel -c %{svnrev}
 %else
@@ -31,7 +31,8 @@ Release:	%mkrel %rel
 %endif
 Summary:	Quake III
 BuildRoot:	%{_tmppath}/%{name}-%{version}-build
-Source:	ioquake3-%{version}%{?svnrev:_SVN%{svnrev}}.tar.bz2
+#Source:	ioquake3-%{version}%{?svnrev:_SVN%{svnrev}}.tar.bz2
+Source:        ioquake3-%{version}.tar.bz2
 %if %with_installer
 Recommends:	openal
 %endif
@@ -82,17 +83,18 @@ Authors:
 
 %endif
 %prep
-%setup -q -n %{name}-%{version}%{?svnrev:_SVN%{svnrev}}
+#%setup -q -n %{name}-%{version}%{?svnrev:_SVN%{svnrev}}
+%setup -q -n %{name}-%{version}
 rm -rf code/SDL12 code/libs code/AL
 
 %build
+echo "-->%{optflags}"
 cat > dobuild <<'EOF'
 #!/bin/sh
 make %{?jobs:-j%jobs} \
 	VERSION=%{version} \
 	RELEASE=%{release} \
 	OPTIMIZE="%{optflags} -O3 -ffast-math -fno-strict-aliasing" \
-	TOOLS_OPTIMIZE="%{optflags} -fno-strict-aliasing" \
 	GENERATE_DEPENDENCIES=0 \
 	USE_LOCAL_HEADERS=0 \
 %if %with_installer
