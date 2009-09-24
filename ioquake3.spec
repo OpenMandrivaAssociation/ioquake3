@@ -32,7 +32,8 @@ Release:	%mkrel %rel
 Summary:	Quake III
 BuildRoot:	%{_tmppath}/%{name}-%{version}-build
 #Source:	ioquake3-%{version}%{?svnrev:_SVN%{svnrev}}.tar.bz2
-Source:        ioquake3-%{version}.tar.bz2
+Source:		ioquake3-%{version}.tar.bz2
+Patch0:		fix_printf_asm_tool.patch
 %if %with_installer
 Recommends:	openal
 %endif
@@ -86,6 +87,7 @@ Authors:
 #%setup -q -n %{name}-%{version}%{?svnrev:_SVN%{svnrev}}
 %setup -q -n %{name}-%{version}
 rm -rf code/SDL12 code/libs code/AL
+%patch0 -p1
 
 %build
 cat > dobuild <<'EOF'
@@ -94,6 +96,7 @@ make %{?jobs:-j%jobs} \
 	VERSION=%{version} \
 	RELEASE=%{release} \
 	OPTIMIZE="%{optflags} -O3 -ffast-math -fno-strict-aliasing" \
+	TOOLS_OPTIMIZE="%{optflags} -fno-strict-aliasing" \
 	GENERATE_DEPENDENCIES=0 \
 	USE_LOCAL_HEADERS=0 \
 %if %with_installer
