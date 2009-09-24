@@ -88,7 +88,6 @@ Authors:
 rm -rf code/SDL12 code/libs code/AL
 
 %build
-echo "-->%{optflags}"
 cat > dobuild <<'EOF'
 #!/bin/sh
 make %{?jobs:-j%jobs} \
