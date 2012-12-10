@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Quake III Arena Demo
+GenericName= First Person Shooter like game
+Comment=Quake 3 Arena demo launcher, will automatically download the needed data-files
+Exec=ioquake3-demo
+Icon=ioquake3
+Terminal=false
+Type=Application
+Categories=Game;ArcadeGame;

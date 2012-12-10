@@ -1,0 +1,26 @@
+diff -up quake3-1.36/code/qcommon/q_platform.h.build quake3-1.36/code/qcommon/q_platform.h
+--- quake3-1.36/code/qcommon/q_platform.h.build	2011-08-09 09:15:14.000000000 +0200
++++ quake3-1.36/code/qcommon/q_platform.h	2011-08-09 09:16:06.000000000 +0200
+@@ -184,10 +184,10 @@ Foundation, Inc., 51 Franklin St, Fifth 
+ #define ARCH_STRING "ppc64"
+ #elif defined __powerpc__
+ #define ARCH_STRING "ppc"
+-#elif defined __s390__
+-#define ARCH_STRING "s390"
+ #elif defined __s390x__
+ #define ARCH_STRING "s390x"
++#elif defined __s390__
++#define ARCH_STRING "s390"
+ #elif defined __ia64__
+ #define ARCH_STRING "ia64"
+ #elif defined __alpha__
+@@ -348,6 +348,9 @@ float FloatSwap (const float *f);
+ #error "Endianness defined as both big and little"
+ #elif defined( Q3_BIG_ENDIAN )
+ 
++void CopyShortSwap(void *dest, void *src);
++void CopyLongSwap(void *dest, void *src);
++
+ #define CopyLittleShort(dest, src) CopyShortSwap(dest, src)
+ #define CopyLittleLong(dest, src) CopyLongSwap(dest, src)
+ #define LittleShort(x) ShortSwap(x)

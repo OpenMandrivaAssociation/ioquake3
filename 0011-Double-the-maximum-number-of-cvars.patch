@@ -1,0 +1,28 @@
+From: Simon McVittie <smcv@debian.org>
+Date: Wed, 11 Aug 2010 21:37:03 +0100
+Subject: [PATCH] Double the maximum number of cvars
+
+OpenArena has had problems with hitting the cvar limit, and it only costs
+52K of memory (on i386/armel) to double the arbitrary limit. That should
+hopefully be plenty.
+
+Origin: vendor, Debian
+Forwarded: no
+---
+ code/qcommon/cvar.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/code/qcommon/cvar.c b/code/qcommon/cvar.c
+index 3558f0f..15715bc 100644
+--- a/code/qcommon/cvar.c
++++ b/code/qcommon/cvar.c
+@@ -28,7 +28,7 @@ cvar_t		*cvar_vars = NULL;
+ cvar_t		*cvar_cheats;
+ int			cvar_modifiedFlags;
+ 
+-#define	MAX_CVARS	1024
++#define	MAX_CVARS	2048
+ cvar_t		cvar_indexes[MAX_CVARS];
+ int			cvar_numIndexes;
+ 
+-- 

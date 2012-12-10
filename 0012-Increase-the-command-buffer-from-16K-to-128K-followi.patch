@@ -1,0 +1,24 @@
+From: Simon McVittie <smcv@debian.org>
+Date: Wed, 11 Aug 2010 21:40:03 +0100
+Subject: [PATCH] Increase the command buffer from 16K to 128K, following OpenArena
+
+Origin: OpenArena
+Forwarded: no
+---
+ code/qcommon/cmd.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/code/qcommon/cmd.c b/code/qcommon/cmd.c
+index f1243b3..349ff7d 100644
+--- a/code/qcommon/cmd.c
++++ b/code/qcommon/cmd.c
+@@ -24,7 +24,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ #include "q_shared.h"
+ #include "qcommon.h"
+ 
+-#define	MAX_CMD_BUFFER	16384
++#define	MAX_CMD_BUFFER	128*1024
+ #define	MAX_CMD_LINE	1024
+ 
+ typedef struct {
+-- 
