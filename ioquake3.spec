@@ -37,6 +37,7 @@ Patch5:		cflags.patch
 BuildRequires:  SDL12-devel
 BuildRequires:	pkgconfig(xt)
 BuildRequires:	pkgconfig(gl)
+BuildRequires:	pkgconfig(glu)
 BuildRequires:  pkgconfig(speexdsp)
 BuildRequires:  pkgconfig(libcurl)
 BuildRequires:  openal-soft-devel
