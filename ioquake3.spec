@@ -1,10 +1,11 @@
-#define debug_package	%{nil}
-%define         svnrev svn2102
+%define svnrev	svn2102
+%define rel	5
+
 Name:           ioquake3
 Version:        1.36
-Release:        1.%{svnrev}
+Release:        %mkrel 11.%{svnrev}.%{rel}
 Summary:        Quake 3 Arena engine (ioquake3 version)
-Group:          Games/Arcade
+Group:          Games/Shooter
 License:        GPLv2+
 URL:            http://ioquake3.org/
 # to regenerate (note included systemlib copies are removed for size, lcc
@@ -22,23 +23,27 @@ Source3:        %{name}.desktop
 Source4:        %{name}.png
 Source5:        %{name}-update.sh
 Source6:        %{name}-update.autodlrc
+#commented out because builds ok without them, just want to test it more
+#to be sure they're not needed anymore
+#Source7:       jpeg_memsrc.h
+#Source8:       jpeg_memsrc.c
 Patch1:         quake3-1.34-rc4-demo-pak.patch
 # patches from Debian for openarena compatibility (increase some buffer sizes)
 Patch2:         0011-Double-the-maximum-number-of-cvars.patch
 Patch3:         0012-Increase-the-command-buffer-from-16K-to-128K-followi.patch
 # big-endian build fix
 Patch4:         quake3-1.36-build.patch
-BuildRequires:  pkgconfig(sdl)
-BuildRequires:  pkgconfig(xt)
-BuildRequires:  pkgconfig(openal)
-BuildRequires:  jpeg-devel
-BuildRequires:  pkgconfig(speex)
-BuildRequires:  pkgconfig(vorbis)
+Patch5:		cflags.patch
+BuildRequires:  SDL12-devel
+BuildRequires:	pkgconfig(xt)
+BuildRequires:  pkgconfig(speexdsp)
 BuildRequires:  pkgconfig(libcurl)
-BuildRequires:  pkgconfig(zlib)
+BuildRequires:  openal-soft-devel
+BuildRequires:  jpeg-devel
+BuildRequires:	pkgconfig(speex)
+BuildRequires:	pkgconfig(vorbis)
+BuildRequires:	pkgconfig(zlib)
 BuildRequires:  desktop-file-utils
-BuildRequires:  pkgconfig(gl)
-BuildRequires:  pkgconfig(glu)
 %ifarch %{ix86} x86_64
 BuildRequires:  nasm
 %endif
@@ -78,7 +83,7 @@ engine, below is an (incomplete list):
 
 %package demo
 Summary:        Quake 3 Arena tournament 3D shooter game demo installer
-Group:          Games/Arcade
+Group:          Games/Shooter
 Requires:       ioquake3 = %{version}-%{release}
 Requires:       opengl-games-utils 
 BuildArch:      noarch
@@ -86,7 +91,7 @@ BuildArch:      noarch
 # quake3-demo used to be part of the quake3 package, make sure that people
 # who have the old version with the demo included don't all of a sudden have
 # the demo menu entry disappear.
-
+#Obsoletes:      ioquake3 <= 1.34-0.4.rc4.fc9
 
 %description demo
 Quake 3 Arena tournament 3D shooter game demo installer. The Quake3 engine is
@@ -98,57 +103,58 @@ This package installs an application menu entry for playing the Quake3 Arena
 demo. The first time you click this menu entry, it will offer to download and
 install the Quake 3 demo datafiles for you.
 
+
 %prep
 %setup -q
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-
-
+%apply_patches
 
 %build
+# create smart sed rule here instead of this one
+sed -i 's!REPLACE_FLAGS_HERE!%{optflags}!g' Makefile
+
 # the CROSS_COMPILING=1 is a hack to not build q3cc and qvm files
 # since we've stripped out q3cc as this is not Free Software.
 %make \
-    OPTIMIZE="$RPM_OPT_FLAGS -fno-strict-aliasing" \
     DEFAULT_BASEDIR=%{_datadir}/%{name} \
     USE_CODEC_VORBIS=1 \
     USE_LOCAL_HEADERS=0 \
+    OPTIMIZE="%{optflags}" \
+    CC=%{__cc} \
     BUILD_GAME_SO=0 \
     GENERATE_DEPENDENCIES=0 \
     USE_INTERNAL_SPEEX=0 \
     USE_INTERNAL_ZLIB=0 \
     USE_INTERNAL_JPEG=0 \
     BUILD_CLIENT_SMP=1 \
+    V=1 \
     CROSS_COMPILING=1
 
 
 %install
-mkdir -p $RPM_BUILD_ROOT%{_bindir}
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{name}
+mkdir -p %{buildroot}%{_bindir}
+mkdir -p %{buildroot}%{_datadir}/%{name}
 
 install -m 755 build/release-linux-*/%{name}.* \
-  $RPM_BUILD_ROOT%{_bindir}/%{name}
+  %{buildroot}%{_bindir}/%{name}
 install -m 755 build/release-linux-*/%{name}-smp.* \
-  $RPM_BUILD_ROOT%{_bindir}/%{name}-smp
+  %{buildroot}%{_bindir}/%{name}-smp
 install -m 755 build/release-linux-*/ioq3ded.* \
-  $RPM_BUILD_ROOT%{_bindir}/ioq3ded
-install -p -m 755 %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}/ioquake3-demo
-install -p -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{_datadir}/%{name}
+  %{buildroot}%{_bindir}/ioq3ded
+install -p -m 755 %{SOURCE1} %{buildroot}%{_bindir}/ioquake3-demo
+install -p -m 644 %{SOURCE2} %{buildroot}%{_datadir}/%{name}
 
-install -p -m 755 %{SOURCE5} $RPM_BUILD_ROOT%{_bindir}/ioquake3-update
-install -p -m 644 %{SOURCE6} $RPM_BUILD_ROOT%{_datadir}/%{name}
+install -p -m 755 %{SOURCE5} %{buildroot}%{_bindir}/ioquake3-update
+install -p -m 644 %{SOURCE6} %{buildroot}%{_datadir}/%{name}
 
 # below is the desktop file and icon stuff.
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/applications
-desktop-file-install \
-  --dir $RPM_BUILD_ROOT%{_datadir}/applications \
+mkdir -p %{buildroot}%{_datadir}/applications
+desktop-file-install --vendor mageia            \
+  --dir %{buildroot}%{_datadir}/applications \
   %{SOURCE3}
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/32x32/apps
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/64x64/apps
+mkdir -p %{buildroot}%{_datadir}/icons/hicolor/32x32/apps
+mkdir -p %{buildroot}%{_datadir}/icons/hicolor/64x64/apps
 install -p -m 644 %{SOURCE4} \
-  $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/64x64/apps
+  %{buildroot}%{_datadir}/icons/hicolor/64x64/apps
 
 
 %files
@@ -164,5 +170,5 @@ install -p -m 644 %{SOURCE4} \
 %files demo
 %{_bindir}/%{name}-demo
 %{_datadir}/%{name}/%{name}.autodlrc
-%{_datadir}/applications/%{name}.desktop
+%{_datadir}/applications/mageia-%{name}.desktop
 %{_datadir}/icons/hicolor/64x64/apps/%{name}.png
