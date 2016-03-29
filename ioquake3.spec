@@ -36,6 +36,7 @@ Patch4:         quake3-1.36-build.patch
 Patch5:		cflags.patch
 BuildRequires:  SDL12-devel
 BuildRequires:	pkgconfig(xt)
+BuildRequires:	pkgconfig(gl)
 BuildRequires:  pkgconfig(speexdsp)
 BuildRequires:  pkgconfig(libcurl)
 BuildRequires:  openal-soft-devel
