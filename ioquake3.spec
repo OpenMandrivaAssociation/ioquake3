@@ -1,9 +1,8 @@
-%define svnrev	svn2102
-%define rel	5
+%define gitrev	ee7fde
 
 Name:           ioquake3
 Version:        1.36
-Release:        %mkrel 11.%{svnrev}.%{rel}
+Release:        1.%{gitrev}.0
 Summary:        Quake 3 Arena engine (ioquake3 version)
 Group:          Games/Shooter
 License:        GPLv2+
@@ -16,7 +15,7 @@ URL:            http://ioquake3.org/
 # rm -fr code/jpeg-8c code/zlib code/libspeex code/tools/lcc
 # popd
 # tar cvfj %{name}-%{version}.tar.bz2 %{name}-%{version}
-Source0:        %{name}-%{version}-svn2102.tar.bz2
+Source0:        %{name}-%{version}-%{gitrev}.tar.xz
 Source1:        %{name}-demo.sh
 Source2:        %{name}.autodlrc
 Source3:        %{name}.desktop
@@ -27,14 +26,11 @@ Source6:        %{name}-update.autodlrc
 #to be sure they're not needed anymore
 #Source7:       jpeg_memsrc.h
 #Source8:       jpeg_memsrc.c
-Patch1:         quake3-1.34-rc4-demo-pak.patch
+#Patch1:         quake3-1.34-rc4-demo-pak.patch
 # patches from Debian for openarena compatibility (increase some buffer sizes)
-Patch2:         0011-Double-the-maximum-number-of-cvars.patch
-Patch3:         0012-Increase-the-command-buffer-from-16K-to-128K-followi.patch
 # big-endian build fix
-Patch4:         quake3-1.36-build.patch
-Patch5:		cflags.patch
-BuildRequires:  SDL12-devel
+#Patch5:		cflags.patch
+BuildRequires:  pkgconfig(sdl2)
 BuildRequires:	pkgconfig(xt)
 BuildRequires:	pkgconfig(gl)
 BuildRequires:	pkgconfig(glu)
@@ -44,6 +40,7 @@ BuildRequires:  openal-soft-devel
 BuildRequires:  jpeg-devel
 BuildRequires:	pkgconfig(speex)
 BuildRequires:	pkgconfig(vorbis)
+BuildRequires:  pkgconfig(opus)
 BuildRequires:	pkgconfig(zlib)
 BuildRequires:  desktop-file-utils
 %ifarch %{ix86} x86_64
@@ -107,7 +104,7 @@ install the Quake 3 demo datafiles for you.
 
 
 %prep
-%setup -q
+%setup -qn %{name}-%{version}-%{gitrev}
 %apply_patches
 
 %build
@@ -119,8 +116,11 @@ sed -i 's!REPLACE_FLAGS_HERE!%{optflags}!g' Makefile
 %make \
     DEFAULT_BASEDIR=%{_datadir}/%{name} \
     USE_CODEC_VORBIS=1 \
+    USE_CODEC_OPUS=1 \
     USE_LOCAL_HEADERS=0 \
     OPTIMIZE="%{optflags}" \
+    CFLAGS="%{optflags}" \
+    LDFLAGS="%{ldflags}" \
     CC=%{__cc} \
     BUILD_GAME_SO=0 \
     GENERATE_DEPENDENCIES=0 \
@@ -138,8 +138,6 @@ mkdir -p %{buildroot}%{_datadir}/%{name}
 
 install -m 755 build/release-linux-*/%{name}.* \
   %{buildroot}%{_bindir}/%{name}
-install -m 755 build/release-linux-*/%{name}-smp.* \
-  %{buildroot}%{_bindir}/%{name}-smp
 install -m 755 build/release-linux-*/ioq3ded.* \
   %{buildroot}%{_bindir}/ioq3ded
 install -p -m 755 %{SOURCE1} %{buildroot}%{_bindir}/ioquake3-demo
@@ -150,7 +148,7 @@ install -p -m 644 %{SOURCE6} %{buildroot}%{_datadir}/%{name}
 
 # below is the desktop file and icon stuff.
 mkdir -p %{buildroot}%{_datadir}/applications
-desktop-file-install --vendor mageia            \
+desktop-file-install --vendor %{_vendor} \
   --dir %{buildroot}%{_datadir}/applications \
   %{SOURCE3}
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/32x32/apps
@@ -160,10 +158,9 @@ install -p -m 644 %{SOURCE4} \
 
 
 %files
-%doc BUGS ChangeLog COPYING.txt id-readme.txt md4-readme.txt NOTTODO README
+%doc BUGS ChangeLog COPYING.txt id-readme.txt md4-readme.txt NOTTODO
 %doc TODO
 %{_bindir}/%{name}
-%{_bindir}/%{name}-smp
 %{_bindir}/%{name}-update
 %{_bindir}/ioq3ded
 %dir %{_datadir}/%{name}
@@ -172,5 +169,5 @@ install -p -m 644 %{SOURCE4} \
 %files demo
 %{_bindir}/%{name}-demo
 %{_datadir}/%{name}/%{name}.autodlrc
-%{_datadir}/applications/mageia-%{name}.desktop
+%{_datadir}/applications/%{_vendor}-%{name}.desktop
 %{_datadir}/icons/hicolor/64x64/apps/%{name}.png
