@@ -108,9 +108,6 @@ install the Quake 3 demo datafiles for you.
 %apply_patches
 
 %build
-# create smart sed rule here instead of this one
-sed -i 's!REPLACE_FLAGS_HERE!%{optflags}!g' Makefile
-
 # the CROSS_COMPILING=1 is a hack to not build q3cc and qvm files
 # since we've stripped out q3cc as this is not Free Software.
 %make \
