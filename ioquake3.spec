@@ -135,6 +135,10 @@ mkdir -p %{buildroot}%{_datadir}/%{name}
 
 install -m 755 build/release-linux-*/%{name}.* \
   %{buildroot}%{_bindir}/%{name}
+
+install -m 755 build/release-linux-*/*.so* \
+  %{buildroot}%{_datadir}/%{name}
+
 install -m 755 build/release-linux-*/ioq3ded.* \
   %{buildroot}%{_bindir}/ioq3ded
 install -p -m 755 %{SOURCE1} %{buildroot}%{_bindir}/ioquake3-demo
@@ -162,6 +166,7 @@ install -p -m 644 %{SOURCE4} \
 %{_bindir}/ioq3ded
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/%{name}-update.autodlrc
+%{_datadir}/%{name}/*.so
 
 %files demo
 %{_bindir}/%{name}-demo
