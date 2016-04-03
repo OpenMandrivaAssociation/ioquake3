@@ -2,7 +2,7 @@
 
 Name:           ioquake3
 Version:        1.36
-Release:        12.%{gitrev}.0
+Release:        12.%{gitrev}.1
 Summary:        Quake 3 Arena engine (ioquake3 version)
 Group:          Games/Shooter
 License:        GPLv2+
