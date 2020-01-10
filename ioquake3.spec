@@ -105,7 +105,7 @@ install the Quake 3 demo datafiles for you.
 
 %prep
 %setup -qn %{name}-%{version}-%{gitrev}
-%apply_patches
+%autopatch -p1
 
 %build
 # the CROSS_COMPILING=1 is a hack to not build q3cc and qvm files
