@@ -6,7 +6,7 @@ Release:        12.%{gitrev}.1
 Summary:        Quake 3 Arena engine (ioquake3 version)
 Group:          Games/Shooter
 License:        GPLv2+
-URL:            http://ioquake3.org/
+URL:            https://ioquake3.org/
 # to regenerate (note included systemlib copies are removed for size, lcc
 # is removed as it is not Free software):
 # svn co svn://svn.icculus.org/quake3/tags/%{version} %{name}-%{version}
